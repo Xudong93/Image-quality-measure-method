@@ -1,0 +1,26 @@
+import cv2 as cv
+import os
+import numpy as np
+from PIL import Image, ImageOps
+from glob import glob
+from os.path import join
+from skimage.color import rgb2lab, lab2rgb
+import math
+
+
+
+def qiue(img):
+    c1=0.4680
+    c2=0.2745
+    c3=0.2576
+    img_lab = rgb2lab(img)
+    L, a, b = cv.split(img_lab)
+    chroma=np.sqrt(a*a+b*b)
+    u_c=np.mean(chroma)
+    sigma=np.sqrt(np.mean(np.mean((chroma*chroma)-(u_c*u_c))))
+    saturation=chroma/L
+    u_s=np.mean(saturation)
+    cobtrast_l=(np.max(L)-np.min(L))
+    uciqe=c1*sigma+c2*cobtrast_l+c3*u_s
+    print(uciqe)
+    return uciqe
